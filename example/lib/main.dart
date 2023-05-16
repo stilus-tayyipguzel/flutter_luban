@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:example/util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_luban/flutter_luban.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_luban/flutter_luban.dart';
 import 'package:zoomable_image/zoomable_image.dart';
-import 'util.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   File primaryFile;
   File compressedFile;
-  var time_start = 0;
+  var timeStart = 0;
   var time = 0;
 
   @override
@@ -115,22 +115,23 @@ class _MyHomePageState extends State<MyHomePage> {
     File imageFile = await ImagePicker.pickImage(source: type);
     setState(() {
       primaryFile = imageFile;
-      time_start = DateTime.now().millisecondsSinceEpoch;
+      timeStart = DateTime.now().millisecondsSinceEpoch;
     });
     if (imageFile == null) return;
     final tempDir = await getTemporaryDirectory();
 
     CompressObject compressObject = CompressObject(
-      imageFile:imageFile, //image
-      path:tempDir.path, //compress to path
-      quality: 85,//first compress quality, default 80
-      step: 9,//compress quality step, The bigger the fast, Smaller is more accurate, default 6
+      imageFile: imageFile, //image
+      path: tempDir.path, //compress to path
+      quality: 85, //first compress quality, default 80
+      step:
+          9, //compress quality step, The bigger the fast, Smaller is more accurate, default 6
 //      mode: CompressMode.LARGE2SMALL,//default AUTO
     );
     Luban.compressImage(compressObject).then((_path) {
       setState(() {
         compressedFile = File(_path);
-        time = DateTime.now().millisecondsSinceEpoch - time_start;
+        time = DateTime.now().millisecondsSinceEpoch - timeStart;
       });
     });
   }
